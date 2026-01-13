@@ -1,12 +1,13 @@
-﻿from dataclasses import dataclass
+from dataclasses import dataclass
 from typing import List, Tuple
 import bisect
+
 
 @dataclass(order=True, frozen=True)
 class TimePoint:
     weekday: int  # 0=Monday, 6=Sunday
-    hour: int     # 0-23
-    minute: int   # 0-59
+    hour: int  # 0-23
+    minute: int  # 0-59
 
     def __post_init__(self):
         if not (0 <= self.weekday <= 6):
@@ -20,6 +21,7 @@ class TimePoint:
         """Converts the time point to total minutes from the start of the week (Monday 00:00)."""
         return self.weekday * 24 * 60 + self.hour * 60 + self.minute
 
+
 @dataclass(frozen=True)
 class TimeSpan:
     start: TimePoint
@@ -32,9 +34,9 @@ class TimeSpan:
     def contains(self, tp: TimePoint) -> bool:
         return self.start <= tp < self.end
 
-    def overlaps(self, other: 'TimeSpan') -> bool:
+    def overlaps(self, other: "TimeSpan") -> bool:
         return max(self.start, other.start) < min(self.end, other.end)
-    
+
     # Make TimeSpan comparable based on start time for bisect
     def __lt__(self, other):
         if isinstance(other, TimeSpan):
@@ -43,6 +45,7 @@ class TimeSpan:
         if isinstance(other, TimePoint):
             return self.start < other
         return NotImplemented
+
 
 class WeeklyTimespans:
     def __init__(self, ranges: List[Tuple[Tuple[int, int, int], Tuple[int, int, int]]]):
@@ -56,17 +59,19 @@ class WeeklyTimespans:
             end = TimePoint(*end_tuple)
             new_span = TimeSpan(start, end)
             self._add_span(new_span)
-        
+
         # Sort spans by start time
         self.spans.sort(key=lambda s: s.start)
-        
+
         # Create a list of start points for bisect
         self.start_points = [span.start for span in self.spans]
 
     def _add_span(self, new_span: TimeSpan):
         for span in self.spans:
             if span.overlaps(new_span):
-                raise ValueError(f"Overlapping timespans detected: {span} and {new_span}")
+                raise ValueError(
+                    f"Overlapping timespans detected: {span} and {new_span}"
+                )
         self.spans.append(new_span)
 
     def is_in_timespan(self, weekday: int, hour: int, minute: int) -> bool:
@@ -74,15 +79,15 @@ class WeeklyTimespans:
         Checks if the given time falls into any of the configured timespans.
         """
         current_tp = TimePoint(weekday, hour, minute)
-        
+
         # Find the first span that starts AFTER the current time.
         # The candidate span that *might* contain current_tp is the one immediately before that.
         idx = bisect.bisect_right(self.start_points, current_tp)
-        
+
         if idx == 0:
             # Current time is before the first span starts
             return False
-            
+
         # Check the span at idx - 1
         candidate_span = self.spans[idx - 1]
         return candidate_span.contains(current_tp)
