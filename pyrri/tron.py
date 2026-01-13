@@ -18,7 +18,12 @@ from pyrri.configuration import Configuration, RestrictionAction
 ProcessInfo = namedtuple("ProcessInfo", ["title", "exe_name", "pid", "hwnd"])
 
 
-class Pyrri:
+class Tron:
+    """
+    Main entry point. Called Tron, because Tron was designed to
+    be able to restrict even the Master Control Program.
+    """
+
     def __init__(self, logfile, config_url=None, config_file=None, silent=True):
         self.logfile = logfile
         self.stopped = False
@@ -195,11 +200,17 @@ if __name__ == "__main__":
     project_root = Path(__file__).parent.parent
     default_config_path = project_root / "default_config.json"
 
-    tron = Pyrri(Path(__file__).parent / "logfile.txt", config_file=default_config_path)
+    tron = Tron(
+        Path(__file__).parent / "logfile.txt",
+        config_url="https://raw.githubusercontent.com/kadeng/pyrri/refs/heads/main/default_config.json",
+        config_file=default_config_path,
+        silent=True,
+    )
 
     def on_shutdown(ctrl_type):
         tron.log(f"ACTION: Shutting down... ({ctrl_type})")
         tron.stop()
 
     set_shutdown_handler(on_shutdown)
+    tron.install_signal_handlers()  # Ignore termination signals.
     tron.run()  # Will only return via shutdown handler.
