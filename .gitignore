@@ -1,0 +1,5 @@
+﻿build
+.venv
+pyrri.egg-info
+*.pyc
+.pytest_cache

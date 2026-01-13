@@ -1,0 +1,14 @@
+[project]
+name = "pyrri"
+version = "0.1.0"
+description = "Process guard"
+requires-python = ">=3.14"
+dependencies = [
+    "pywin32",
+    "psutil",
+    "pytest",
+    "pipx",
+    "pytz",
+]
+[project.gui-scripts]
+windows_systool = "pyrri:tron"
