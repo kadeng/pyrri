@@ -41,7 +41,7 @@
       "action": "minimize"
     },
     {
-      "process_regex": "java",
+      "process_regex": "java|gamingservices",
       "title_regex": "Minecraft|Lunar Client|Fabric",
       "action": "minimize"
     },
