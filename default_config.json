@@ -37,6 +37,15 @@
       "action": "minimize"
     },
     {
+      "process_regex": "Lunar Client",
+      "action": "minimize"
+    },
+    {
+      "process_regex": "java",
+      "title_regex": "Minecraft|Lunar Client|Fabric",
+      "action": "minimize"
+    },
+    {
       "process_regex": "anno18|Anno18",
       "action": "minimize"
     }

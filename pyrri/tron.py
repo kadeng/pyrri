@@ -201,7 +201,7 @@ if __name__ == "__main__":
     default_config_path = project_root / "default_config.json"
 
     tron = Tron(
-        Path(__file__).parent / "logfile.txt",
+        Path.home() / "logfile.txt",
         config_url="https://raw.githubusercontent.com/kadeng/pyrri/refs/heads/main/default_config.json",
         config_file=default_config_path,
         silent=True,
