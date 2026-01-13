@@ -37,7 +37,7 @@
       "action": "minimize"
     },
     {
-      "process_regex": "Lunar Client",
+      "process_regex": "Lunar Client|StartMenuExperienceHost",
       "action": "minimize"
     },
     {
